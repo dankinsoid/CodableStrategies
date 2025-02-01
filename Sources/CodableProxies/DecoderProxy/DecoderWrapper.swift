@@ -397,11 +397,11 @@ private final class UnkeyedDecodingContainerWrapper: UnkeyedDecodingContainer {
 	}
 
 	func decodeNil() -> Bool {
-		(try? decoder(\.decodeNil).decode(Bool.self, \.decodeNil) { try wrapped.decodeNil() }) ?? false
+        (try? decoder(\.decodeNil) { try $0.decode(Bool.self, \.decodeNil) { try wrapped.decodeNil() } }) ?? false
 	}
 
 	func decode(_ type: Bool.Type) throws -> Bool {
-		try decoder(\.decodeBool).decode(type, \.decodeBool) { try wrapped.decode(type) }
+        try decoder(\.decodeBool) { try $0.decode(type, \.decodeBool) { try wrapped.decode(type) } }
 	}
 
 	func decode(_ type: String.Type) throws -> String {
@@ -541,17 +541,19 @@ private final class UnkeyedDecodingContainerWrapper: UnkeyedDecodingContainer {
 	}
 
 	@inline(__always)
-	private func decoder(_ ignoring: PartialKeyPath<DecodingStrategy>?) -> DecoderWrapper {
-		_decoder.child(
-			UnkeyedContainerDecoder(
-				base: UnkeyedDecodingContainerWrapper(
-					wrapped: wrapped,
-					decoder: _decoder.ignoring(ignoring)
-				),
-				userInfo: _decoder.userInfo
-			)
-		)
-	}
+    private func decoder<T>(_ ignoring: PartialKeyPath<DecodingStrategy>?, decode: (DecoderWrapper) throws -> T) rethrows -> T {
+        try decode(
+            _decoder.child(
+                UnkeyedContainerDecoder(
+                    base: UnkeyedDecodingContainerWrapper(
+                        wrapped: wrapped,
+                        decoder: _decoder.ignoring(ignoring)
+                    ),
+                    userInfo: _decoder.userInfo
+                )
+            )
+        )
+    }
 
 	@inline(__always)
 	private var notNil: Bool {
