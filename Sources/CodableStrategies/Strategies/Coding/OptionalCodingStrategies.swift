@@ -12,4 +12,9 @@ public extension CodingStrategy.Optional {
 	static var encodeNull: CodingStrategy {
 		CodingStrategy(decoding: DecodingStrategy(), encoding: .Optional.null)
 	}
+
+	/// Decodes `nil` if value is missed.
+	static var nilIfError: CodingStrategy {
+		CodingStrategy(decoding: .Optional.nilIfError, encoding: EncodingStrategy())
+	}
 }

@@ -17,12 +17,10 @@ public extension DecodingStrategy.Bool {
 
 	/// Decodes booleans from strings if the value is quoted.
 	static func string(_ condition: @escaping (Swift.String) -> Swift.Bool) -> DecodingStrategy {
-		DecodingStrategy(
-			decodeBool: {
-				let container = try $0.singleValueContainer()
-				return try condition(container.decode(Swift.String.self))
-			}
-		)
+		DecodingStrategy(Bool.self) {
+			let container = try $0.singleValueContainer()
+			return try condition(container.decode(Swift.String.self))
+		}
 	}
 }
 

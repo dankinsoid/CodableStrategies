@@ -1,8 +1,8 @@
 import Foundation
 
-/// A proxy structure that wraps an encoder, providing enhanced functionality with custom encoding strategies.
+/// A decorator that wraps an encoder, providing enhanced functionality with custom encoding strategies.
 ///
-/// `EncoderProxy` offers a standardized interface for encoding, but with the added flexibility of specifying encoding strategies.
+/// `EncoderDecorator` offers a standardized interface for encoding, but with the added flexibility of specifying encoding strategies.
 /// This makes it possible to modify encoding behavior without creating entirely new encoder implementations.
 ///
 /// - Generic Parameter `Target`: The type of the target format into which values will be encoded.
@@ -10,20 +10,20 @@ import Foundation
 /// Example usage:
 /// ```
 /// let myModel = MyModel(...)
-/// let customEncoder = EncoderProxy(JSONEncoder()) { introspect in
+/// let customEncoder = EncoderDecorator(JSONEncoder()) { introspect in
 ///     // custom encoding logic using `introspect`
 /// }
 /// let jsonData: Data = try customEncoder.encode(myModel)
 /// ```
 ///
-/// - Note: The proxy uses `EncodingStrategy` to determine its behavior during the encoding process.
+/// - Note: The decorator uses `EncodingStrategy` to determine its behavior during the encoding process.
 ///         If a specific strategy is not provided, `.default` is used.
-public struct EncoderProxy<Target>: ValueEncoder {
+public struct EncoderDecorator<Target>: ValueEncoder {
 
 	private let _encode: (_ value: EncoderIntrospect) throws -> Target
 	public var strategy: EncodingStrategy
 
-	/// Initializes a new instance of `EncoderProxy` with a specified encoding strategy and a custom encoding closure.
+	/// Initializes a new instance of `EncoderDecorator` with a specified encoding strategy and a custom encoding closure.
 	///
 	/// - Parameters:
 	///   - strategy: The encoding strategy to be used. Defaults to `.default`.
@@ -36,7 +36,7 @@ public struct EncoderProxy<Target>: ValueEncoder {
 		_encode = encode
 	}
 
-	/// Initializes a new instance of `EncoderProxy` using a provided encoder and an optional encoding strategy.
+	/// Initializes a new instance of `EncoderDecorator` using a provided encoder and an optional encoding strategy.
 	///
 	/// - Parameters:
 	///   - encoder: An encoder that conforms to `ValueEncoder<Target>`.
@@ -66,3 +66,6 @@ public struct EncoderProxy<Target>: ValueEncoder {
 		try _encode(EncoderIntrospect(value: value, strategy: strategy))
 	}
 }
+
+@available(*, deprecated, renamed: "EncoderDecorator")
+public typealias EncoderProxy<Target> = EncoderDecorator<Target>

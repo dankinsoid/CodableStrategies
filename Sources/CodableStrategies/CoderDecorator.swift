@@ -1,16 +1,16 @@
 import Foundation
 
-public struct CoderProxy<SourceTarget>: ValueDecoder, ValueEncoder {
+public struct CoderDecorator<SourceTarget>: ValueDecoder, ValueEncoder {
 
 	public typealias Source = SourceTarget
 	public typealias Target = SourceTarget
 
-	public let encoder: EncoderProxy<SourceTarget>
-	public let decoder: DecoderProxy<SourceTarget>
+	public let encoder: EncoderDecorator<SourceTarget>
+	public let decoder: DecoderDecorator<SourceTarget>
 
 	public init(
-		decoder: DecoderProxy<SourceTarget>,
-		encoder: EncoderProxy<SourceTarget>
+		decoder: DecoderDecorator<SourceTarget>,
+		encoder: EncoderDecorator<SourceTarget>
 	) {
 		self.decoder = decoder
 		self.encoder = encoder
@@ -23,8 +23,8 @@ public struct CoderProxy<SourceTarget>: ValueDecoder, ValueEncoder {
 		strategy: CodingStrategy = .default
 	) {
 		self.init(
-			decoder: DecoderProxy(decoder, strategy: strategy.decoding),
-			encoder: EncoderProxy(encoder, strategy: strategy.encoding)
+			decoder: DecoderDecorator(decoder, strategy: strategy.decoding),
+			encoder: EncoderDecorator(encoder, strategy: strategy.encoding)
 		)
 	}
 
@@ -47,3 +47,6 @@ public struct CoderProxy<SourceTarget>: ValueDecoder, ValueEncoder {
 }
 
 public typealias ValueCoder<SourceTarget> = ValueDecoder<SourceTarget> & ValueEncoder<SourceTarget>
+
+@available(*, deprecated, renamed: "CoderDecorator")
+public typealias CoderProxy<SourceTarget> = CoderDecorator<SourceTarget>

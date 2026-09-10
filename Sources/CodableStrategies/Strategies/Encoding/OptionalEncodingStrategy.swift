@@ -24,7 +24,8 @@ public extension EncodingStrategy.Optional {
 			encodeUInt8IfNil: { try $0.encodeNil() },
 			encodeUInt16IfNil: { try $0.encodeNil() },
 			encodeUInt32IfNil: { try $0.encodeNil() },
-			encodeUInt64IfNil: { try $0.encodeNil() }
+			encodeUInt64IfNil: { try $0.encodeNil() },
+			encodeEncodableIfNil: { _, encoder in try encoder.encodeNil(); return true }
 		)
 	}
 }

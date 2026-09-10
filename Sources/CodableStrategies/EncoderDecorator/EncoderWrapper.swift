@@ -547,7 +547,7 @@ private struct KeyedContainerEncoder<Key: CodingKey>: Encoder, SingleValueEncodi
 		self.userInfo = userInfo
 	}
 
-	func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
+	func container<K>(keyedBy type: K.Type) -> KeyedEncodingContainer<K> where K: CodingKey {
 		base.nestedContainer(keyedBy: type, forKey: key)
 	}
 

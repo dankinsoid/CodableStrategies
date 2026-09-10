@@ -1,10 +1,14 @@
 import Foundation
 
-struct AnyCodingKey: CodingKey {
+struct AnyCodingKey: CodingKey, ExpressibleByStringLiteral {
 
 	var stringValue: String
 	var intValue: Int?
 
+	init(stringLiteral value: StringLiteralType) {
+		self.init(value)
+	}
+	
 	init(intValue: Int) {
 		self.intValue = intValue
 		stringValue = "\(intValue)"

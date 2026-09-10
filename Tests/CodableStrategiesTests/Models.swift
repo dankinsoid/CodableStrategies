@@ -25,6 +25,11 @@ struct Person: Codable {
 	var age: Int
 }
 
+struct ModelWithOptionals: Codable {
+	var int: Int?
+	var string: String?
+}
+
 struct Group: Codable {
 	var groupName: String
 	var members: [Person]
